@@ -29,14 +29,53 @@
     </a>
 
     <nav class="nav__links" id="navLinks" aria-label="Navegación principal">
-      <a href="#nosotros">Nosotros</a>
-      <a href="#menu">Menú del día</a>
-      <a href="#ingredientes">Ingredientes</a>
-      <a href="#visitanos">Visítanos</a>
+      <a href="#nosotros" data-i18n="navNosotros">Nosotros</a>
+      <a href="#menu" data-i18n="navMenu">Menú del día</a>
+      <a href="#ingredientes" data-i18n="navIngredientes">Ingredientes</a>
+      <a href="#visitanos" data-i18n="navVisitanos">Visítanos</a>
     </nav>
 
+    <!-- Language picker -->
+    <div class="nav__lang" id="navLang">
+      <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+        <svg class="lang-btn__globe" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M10 2c-2 3-3 5.5-3 8s1 5 3 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M10 2c2 3 3 5.5 3 8s-1 5-3 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M2.5 7.5h15M2.5 12.5h15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="lang-btn__code" id="langBtnCode">ES</span>
+        <svg class="lang-btn__caret" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="lang-drop" id="langDrop" role="listbox">
+        <button class="lang-opt is-active" data-lang="es" role="option" aria-selected="true">
+          <span class="lang-opt__flag">🇲🇽</span>
+          <span class="lang-opt__name">Español</span>
+          <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="lang-opt" data-lang="en" role="option" aria-selected="false">
+          <span class="lang-opt__flag">🇺🇸</span>
+          <span class="lang-opt__name">English</span>
+          <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="lang-opt" data-lang="fr" role="option" aria-selected="false">
+          <span class="lang-opt__flag">🇫🇷</span>
+          <span class="lang-opt__name">Français</span>
+          <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <a href="https://instagram.com/wabigelato" class="btn btn--ghost nav__cta" target="_blank" rel="noopener">
-      <span>Síguenos</span>
+      <span data-i18n="navCta">Síguenos</span>
     </a>
 
     <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
@@ -48,6 +87,53 @@
     </button>
   </header>
 
+  <!-- ===== MOBILE MENU (fuera del header para evitar stacking context) ===== -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav class="mobile-menu__nav">
+      <a href="#nosotros" class="mobile-menu__link" data-i18n="navNosotros">Nosotros</a>
+      <a href="#menu" class="mobile-menu__link" data-i18n="navMenu">Menú del día</a>
+      <a href="#ingredientes" class="mobile-menu__link" data-i18n="navIngredientes">Ingredientes</a>
+      <a href="#visitanos" class="mobile-menu__link" data-i18n="navVisitanos">Visítanos</a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <button class="mobile-menu__lang-btn" id="mobileLangBtn">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="18" height="18">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M10 2c-2 3-3 5.5-3 8s1 5 3 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M10 2c2 3 3 5.5 3 8s-1 5-3 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M2.5 7.5h15M2.5 12.5h15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span id="mobileLangCode">ES</span>
+        <svg viewBox="0 0 10 6" fill="none" aria-hidden="true" width="10">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <a href="https://www.instagram.com/wabigelato/" class="btn btn--solid mobile-menu__ig" target="_blank" rel="noopener">
+        <span data-i18n="navCta">Síguenos en Instagram</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Language bottom sheet (solo mobile) -->
+  <div class="lang-sheet" id="langSheet" aria-hidden="true">
+    <div class="lang-sheet__backdrop" id="langSheetBackdrop"></div>
+    <div class="lang-sheet__panel">
+      <p class="lang-sheet__title">Idioma / Language</p>
+      <button class="lang-sheet__opt lang-opt is-active" data-lang="es" role="option" aria-selected="true">
+        <span class="lang-opt__flag">🇲🇽</span><span class="lang-opt__name">Español</span>
+        <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="lang-sheet__opt lang-opt" data-lang="en" role="option" aria-selected="false">
+        <span class="lang-opt__flag">🇺🇸</span><span class="lang-opt__name">English</span>
+        <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="lang-sheet__opt lang-opt" data-lang="fr" role="option" aria-selected="false">
+        <span class="lang-opt__flag">🇫🇷</span><span class="lang-opt__name">Français</span>
+        <svg class="lang-opt__check" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5l4 4L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
   <!-- ===== HERO ===== -->
   <section class="hero" id="inicio">
     <div class="hero__deco hero__deco--1" aria-hidden="true"></div>
@@ -55,36 +141,68 @@
 
     <div class="hero__copy">
       <p class="eyebrow">Valladolid · Yucatán</p>
-      <h1 class="hero__title">Gelato<br><span class="hero__title-accent">con alma</span></h1>
-      <p class="hero__sub">Hecho como en Italia, nacido en Yucatán.</p>
-      <p class="hero__desc">
+      <h1 class="hero__title">Gelato<br><span class="hero__title-accent" data-i18n="heroAccent">con alma</span></h1>
+      <p class="hero__sub" data-i18n="heroSub">Hecho como en Italia, nacido en Yucatán.</p>
+      <p class="hero__desc" data-i18n="heroDesc">
         Ingredientes locales de temporada, leche pasteurizada de pueblo y el
         proceso artesanal italiano que respeta cada sabor. Cada día, una
         historia diferente.
       </p>
       <div class="hero__actions">
-        <a href="#menu" class="btn btn--solid"><span>Ver menú de hoy</span></a>
-        <a href="#nosotros" class="link-arrow">Nuestra historia <span aria-hidden="true">→</span></a>
+        <a href="#menu" class="btn btn--solid"><span data-i18n="heroBtn">Ver menú de hoy</span></a>
+        <a href="#nosotros" class="link-arrow"><span data-i18n="heroLink">Nuestra historia</span> <span aria-hidden="true">→</span></a>
       </div>
     </div>
 
     <div class="hero__visual" aria-hidden="true">
-      <div class="cone">
-        <div class="cone__scoops">
-          <span class="scoop scoop--1"></span>
-          <span class="scoop scoop--2"></span>
-          <span class="scoop scoop--3"></span>
+
+      <div class="insta-circle" id="instaCircle">
+
+        <!-- SET A -->
+        <div class="ig-set is-visible">
+          <img class="ig-img" src="img/ig-1.jpg" alt="Wabi Gelato Valladolid">
+          <img class="ig-img" src="img/ig-2.jpg" alt="Gelato de limón con habanero">
+          <img class="ig-img" src="img/ig-3.jpg" alt="Clientes en Wabi Gelato">
+          <img class="ig-img" src="img/ig-4.jpg" alt="Disfrutando el gelato">
+          <img class="ig-img" src="img/ig-5.jpg" alt="Familia en Wabi Gelato">
+          <img class="ig-img" src="img/ig-6.jpg" alt="Pareja con gelato">
+          <img class="ig-img" src="img/ig-7.jpg" alt="Traje típico yucateco">
+          <img class="ig-img" src="img/ig-8.jpg" alt="Amigos en Wabi Gelato">
+          <img class="ig-img" src="img/ig-9.jpg" alt="Fachada Wabi Gelato">
         </div>
-        <div class="cone__body"></div>
-      </div>
+
+        <!-- SET B — mismas fotos en orden alterno -->
+        <div class="ig-set">
+          <img class="ig-img" src="img/ig-5.jpg" alt="Familia en Wabi Gelato">
+          <img class="ig-img" src="img/ig-3.jpg" alt="Clientes en Wabi Gelato">
+          <img class="ig-img" src="img/ig-7.jpg" alt="Traje típico yucateco">
+          <img class="ig-img" src="img/ig-1.jpg" alt="Wabi Gelato Valladolid">
+          <img class="ig-img" src="img/ig-9.jpg" alt="Fachada Wabi Gelato">
+          <img class="ig-img" src="img/ig-2.jpg" alt="Gelato de limón con habanero">
+          <img class="ig-img" src="img/ig-6.jpg" alt="Pareja con gelato">
+          <img class="ig-img" src="img/ig-4.jpg" alt="Disfrutando el gelato">
+          <img class="ig-img" src="img/ig-8.jpg" alt="Amigos en Wabi Gelato">
+        </div>
+
+        <!-- Botón Instagram -->
+        <a class="ig-link" href="https://www.instagram.com/wabigelato/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4.5"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+
+      </div><!-- /insta-circle -->
 
       <div class="float-badge float-badge--top">
-        <span class="float-badge__label">Sabor del día</span>
+        <span class="float-badge__label" data-i18n="heroBadgeSabor">Sabor del día</span>
         <span class="float-badge__name" id="heroBadgeName">Cacao Yucateco</span>
       </div>
       <div class="float-badge float-badge--bottom">
-        <span class="float-badge__label">Ingrediente</span>
-        <span class="float-badge__name">Leche de pueblo</span>
+        <span class="float-badge__label" data-i18n="heroBadgeIngr">Ingrediente</span>
+        <span class="float-badge__name" data-i18n="heroBadgeIngrName">Leche de pueblo</span>
       </div>
     </div>
   </section>
@@ -92,18 +210,18 @@
   <!-- ===== MARQUEE ===== -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
-      <span>Gelatería Tropical</span><i>✦</i>
-      <span>Ingredientes locales</span><i>✦</i>
-      <span>Proceso italiano</span><i>✦</i>
-      <span>Cacao natural</span><i>✦</i>
-      <span>Leche de pueblo</span><i>✦</i>
-      <span>Hecho hoy</span><i>✦</i>
-      <span>Gelatería Tropical</span><i>✦</i>
-      <span>Ingredientes locales</span><i>✦</i>
-      <span>Proceso italiano</span><i>✦</i>
-      <span>Cacao natural</span><i>✦</i>
-      <span>Leche de pueblo</span><i>✦</i>
-      <span>Hecho hoy</span><i>✦</i>
+      <span data-i18n="mq1">Gelatería Tropical</span><i>✦</i>
+      <span data-i18n="mq2">Ingredientes locales</span><i>✦</i>
+      <span data-i18n="mq3">Proceso italiano</span><i>✦</i>
+      <span data-i18n="mq4">Cacao natural</span><i>✦</i>
+      <span data-i18n="mq5">Leche de pueblo</span><i>✦</i>
+      <span data-i18n="mq6">Hecho hoy</span><i>✦</i>
+      <span data-i18n="mq1">Gelatería Tropical</span><i>✦</i>
+      <span data-i18n="mq2">Ingredientes locales</span><i>✦</i>
+      <span data-i18n="mq3">Proceso italiano</span><i>✦</i>
+      <span data-i18n="mq4">Cacao natural</span><i>✦</i>
+      <span data-i18n="mq5">Leche de pueblo</span><i>✦</i>
+      <span data-i18n="mq6">Hecho hoy</span><i>✦</i>
     </div>
   </div>
 
@@ -112,30 +230,30 @@
     <div class="story__visual">
       <div class="story__card">
         <span class="story__num">悟</span>
-        <p class="tag">La filosofía</p>
-        <h3 class="story__card-title">Wabi-sabi: la belleza de lo imperfecto</h3>
-        <p class="story__card-text">
+        <p class="tag" data-i18n="storyTag">La filosofía</p>
+        <h3 class="story__card-title" data-i18n="storyCardTitle">Wabi-sabi: la belleza de lo imperfecto</h3>
+        <p class="story__card-text" data-i18n="storyCardText">
           Como en el concepto japonés, encontramos belleza en lo natural, lo
           artesanal y lo que cambia cada día. No hay dos gelatos iguales, y eso
           lo hace especial.
         </p>
-        <span class="pill"><span class="pill__dot"></span>Receta nueva cada mañana</span>
+        <span class="pill"><span class="pill__dot"></span><span data-i18n="storyPill">Receta nueva cada mañana</span></span>
       </div>
     </div>
 
     <div class="story__copy">
-      <p class="tag">Quiénes somos</p>
-      <h2 class="section-title">Una historia que <em>sabe</em> diferente</h2>
-      <p>
+      <p class="tag" data-i18n="storyWhoTag">Quiénes somos</p>
+      <h2 class="section-title" data-i18n-html="storyTitle">Una historia que <em>sabe</em> diferente</h2>
+      <p data-i18n="storyP1">
         Wabi Gelato nació en el corazón de Valladolid con una convicción simple:
         el mejor gelato no se hace con atajos. Usamos técnica italiana auténtica
         y los ingredientes más honestos de la región.
       </p>
-      <p>
+      <p data-i18n="storyP2">
         Desde cacao totalmente amargo del monte hasta leche fresca pasteurizada
         de ranchos locales, cada sabor cuenta el territorio donde fue hecho.
       </p>
-      <p>
+      <p data-i18n="storyP3">
         El espacio fue pensado para que cada visita sea cálida, íntima y
         memorable — como una tarde familiar en un rincón del Mediterráneo, pero
         con alma yucateca.
@@ -147,18 +265,18 @@
   <section class="menu" id="menu">
     <div class="menu__header">
       <div>
-        <p class="tag">Sabores</p>
-        <h2 class="section-title">Menú de <em>hoy</em></h2>
+        <p class="tag" data-i18n="menuTag">Sabores</p>
+        <h2 class="section-title" data-i18n-html="menuTitle">Menú de <em>hoy</em></h2>
       </div>
-      <p class="menu__note">El menú cambia todos los días según lo mejor de la temporada.</p>
+      <p class="menu__note" data-i18n="menuNote">El menú cambia todos los días según lo mejor de la temporada.</p>
     </div>
 
     <div class="menu__filters" role="tablist" aria-label="Filtrar sabores">
-      <button class="filter is-active" data-cat="todos">Todos</button>
-      <button class="filter" data-cat="frutal">Frutal</button>
-      <button class="filter" data-cat="cremoso">Cremoso</button>
-      <button class="filter" data-cat="chocolate">Chocolate</button>
-      <button class="filter" data-cat="especial">Especial</button>
+      <button class="filter is-active" data-cat="todos" data-i18n="filterAll">Todos</button>
+      <button class="filter" data-cat="frutal" data-i18n="filterFrutal">Frutal</button>
+      <button class="filter" data-cat="cremoso" data-i18n="filterCremoso">Cremoso</button>
+      <button class="filter" data-cat="chocolate" data-i18n="filterChocolate">Chocolate</button>
+      <button class="filter" data-cat="especial" data-i18n="filterEspecial">Especial</button>
     </div>
 
     <div class="menu__grid" id="menuGrid"></div>
@@ -166,33 +284,33 @@
 
   <!-- ===== INGREDIENTS ===== -->
   <section class="ingredients" id="ingredientes">
-    <p class="tag">Lo que usamos</p>
-    <h2 class="section-title">Ingredientes que <em>cuentan</em></h2>
+    <p class="tag" data-i18n="ingrTag">Lo que usamos</p>
+    <h2 class="section-title" data-i18n-html="ingrTitle">Ingredientes que <em>cuentan</em></h2>
 
     <div class="ingredients__grid">
       <div class="ingr">
         <span class="ingr__icon">🥛</span>
-        <h3 class="ingr__name">Leche de rancho</h3>
-        <p class="ingr__origin">Valladolid · Local</p>
-        <p class="ingr__desc">Pasteurizada en pequeños ranchos de la región. Sin conservadores, con sabor real.</p>
+        <h3 class="ingr__name" data-i18n="ingr1Name">Leche de rancho</h3>
+        <p class="ingr__origin" data-i18n="ingr1Origin">Valladolid · Local</p>
+        <p class="ingr__desc" data-i18n="ingr1Desc">Pasteurizada en pequeños ranchos de la región. Sin conservadores, con sabor real.</p>
       </div>
       <div class="ingr">
         <span class="ingr__icon">🍫</span>
-        <h3 class="ingr__name">Cacao amargo</h3>
-        <p class="ingr__origin">Yucatán · 100% natural</p>
-        <p class="ingr__desc">Cacao totalmente puro, sin mezclas ni aditivos. El chocolate como debe ser.</p>
+        <h3 class="ingr__name" data-i18n="ingr2Name">Cacao amargo</h3>
+        <p class="ingr__origin" data-i18n="ingr2Origin">Yucatán · 100% natural</p>
+        <p class="ingr__desc" data-i18n="ingr2Desc">Cacao totalmente puro, sin mezclas ni aditivos. El chocolate como debe ser.</p>
       </div>
       <div class="ingr">
         <span class="ingr__icon">🌿</span>
-        <h3 class="ingr__name">Fruta de temporada</h3>
-        <p class="ingr__origin">Mercado local · Fresco</p>
-        <p class="ingr__desc">Lo que el día tenga mejor. El menú cambia porque la naturaleza cambia.</p>
+        <h3 class="ingr__name" data-i18n="ingr3Name">Fruta de temporada</h3>
+        <p class="ingr__origin" data-i18n="ingr3Origin">Mercado local · Fresco</p>
+        <p class="ingr__desc" data-i18n="ingr3Desc">Lo que el día tenga mejor. El menú cambia porque la naturaleza cambia.</p>
       </div>
       <div class="ingr">
         <span class="ingr__icon">✦</span>
-        <h3 class="ingr__name">Proceso italiano</h3>
-        <p class="ingr__origin">Tradición · Artesanal</p>
-        <p class="ingr__desc">Técnica auténtica que respeta los tiempos y temperaturas del gelato verdadero.</p>
+        <h3 class="ingr__name" data-i18n="ingr4Name">Proceso italiano</h3>
+        <p class="ingr__origin" data-i18n="ingr4Origin">Tradición · Artesanal</p>
+        <p class="ingr__desc" data-i18n="ingr4Desc">Técnica auténtica que respeta los tiempos y temperaturas del gelato verdadero.</p>
       </div>
     </div>
   </section>
@@ -208,7 +326,7 @@
     </div>
 
     <div class="location__info">
-      <h2 class="section-title section-title--light">Ven a <em>vernos</em> hacer el gelato</h2>
+      <h2 class="section-title section-title--light" data-i18n-html="locTitle">Ven a <em>vernos</em> hacer el gelato</h2>
 
       <ul class="location__details">
         <li>
@@ -217,7 +335,7 @@
         </li>
         <li>
           <span class="location__ico">🕑</span>
-          <span>Martes a Domingo<br>12:00 pm — 9:00 pm</span>
+          <span data-i18n-html="locHours">Martes a Domingo<br>12:00 pm — 9:00 pm</span>
         </li>
         <li>
           <span class="location__ico">📸</span>
@@ -226,15 +344,15 @@
       </ul>
 
       <a href="https://maps.google.com/?q=Wabi+Gelato+Valladolid+Yucatan" class="btn btn--accent" target="_blank" rel="noopener">
-        <span>Cómo llegar</span>
+        <span data-i18n="locBtn">Cómo llegar</span>
       </a>
     </div>
   </section>
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <p class="footer__brand">wabi gelato · gelatería tropical vallisoletana</p>
-    <p class="footer__copy">© 2025 Wabi Gelato. Hecho con amor.</p>
+    <p class="footer__brand" data-i18n="footerBrand">wabi gelato · gelatería tropical vallisoletana</p>
+    <p class="footer__copy" data-i18n="footerCopy">© 2025 Wabi Gelato. Hecho con amor.</p>
     <a href="https://instagram.com/wabigelato" class="footer__ig" target="_blank" rel="noopener">@wabigelato</a>
   </footer>
 

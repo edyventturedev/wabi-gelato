@@ -1,8 +1,171 @@
 /* =========================================================
-   WABI GELATO — admin.js
-   Panel de administración con Supabase Auth
+   WABI GELATO — admin.js  (i18n: ES · EN · FR)
    ========================================================= */
 
+/* ---------- Traducciones ---------- */
+const LANGS = {
+  es: {
+    loginTitle: 'Panel del día', loginSub: 'Accede para actualizar el menú',
+    loginEmail: 'Correo electrónico', loginPassword: 'Contraseña',
+    loginBtn: 'Entrar', loginBtnLoading: 'Entrando...',
+    loginFooter: 'Solo para uso del equipo Wabi Gelato',
+    loginErr: 'Correo o contraseña incorrectos',
+    navLabel: 'Panel del día', navPreview: 'Ver sitio', navSignOut: 'Salir',
+    statSabores: 'sabores', statDisp: 'disponibles', statAgot: 'agotados',
+    statHoyLabel: '☀ Sabor de hoy',
+    mainTitle: 'Menú de hoy',
+    mainDesc: 'Edita sabores, marca agotados o agrega nuevos. Los cambios se reflejan al instante en el sitio.',
+    btnAdd: 'Agregar sabor', loading: 'Cargando menú...',
+    emptyGrid: 'No hay sabores todavía. ¡Agrega el primero!',
+    errConnect: 'Error al conectar. Verifica tu configuración de Supabase.',
+    panelAdd: 'Agregar sabor', panelEdit: 'Editar sabor',
+    labelIcon: 'Ícono', labelName: 'Nombre del sabor *',
+    placeholderName: 'Ej: Maracuyá tropical',
+    labelDesc: 'Descripción *',
+    placeholderDesc: 'Describe los ingredientes y el perfil del sabor...',
+    labelCat: 'Categoría',
+    catFrutal: '🍓 Frutal', catCremoso: '🥛 Cremoso', catChocolate: '🍫 Chocolate', catEspecial: '✨ Especial',
+    catLabelFrutal: 'Frutal', catLabelCremoso: 'Cremoso', catLabelChocolate: 'Chocolate', catLabelEspecial: 'Especial',
+    labelTag: 'Etiqueta', placeholderTag: 'Ej: Local, Clásico, Sorbete...',
+    toggleHoy: 'Sabor de hoy ☀', toggleAgotado: 'Marcar como agotado',
+    btnCancel: 'Cancelar', btnSave: 'Guardar sabor', btnSaving: 'Guardando...',
+    btnReset: 'Restablecer menú predeterminado',
+    badgeHoy: 'hoy', badgeSold: 'agotado',
+    cardHoyActive: '☀ Es hoy', cardHoyInactive: '☀ Marcar como hoy',
+    cardSoldActive: '✓ Reponer', cardSoldInactive: '✕ Agotado',
+    toastSignOut: 'Sesión cerrada', toastHoyRemoved: 'Sabor de hoy removido',
+    toastReset: 'Menú restablecido a valores originales',
+    toastErrConnect: 'Error de conexión', toastErrUpdate: 'Error al actualizar', toastErrDelete: 'Error al eliminar',
+    confirmReset: '¿Restablecer el menú a los 6 sabores originales? Se eliminarán todos los cambios.',
+    toastHoySet:    (n) => `☀ "${n}" marcado como sabor de hoy`,
+    toastAgotadoOn: (n) => `"${n}" marcado como agotado`,
+    toastAgotadoOff:(n) => `"${n}" vuelve a estar disponible`,
+    toastDeleted:   (n) => `"${n}" eliminado`,
+    toastAdded:     (n) => `"${n}" agregado al menú`,
+    toastUpdated:   (n) => `"${n}" actualizado`,
+    toastErrSave:   (m) => `Error al guardar: ${m}`,
+    toastErrReset:  (m) => `Error: ${m}`,
+    confirmDelete:  (n) => `¿Eliminar "${n}" del menú?`,
+  },
+  en: {
+    loginTitle: 'Daily Panel', loginSub: 'Log in to update the menu',
+    loginEmail: 'Email address', loginPassword: 'Password',
+    loginBtn: 'Sign in', loginBtnLoading: 'Signing in...',
+    loginFooter: 'For Wabi Gelato team use only',
+    loginErr: 'Incorrect email or password',
+    navLabel: 'Daily Panel', navPreview: 'View site', navSignOut: 'Sign out',
+    statSabores: 'flavors', statDisp: 'available', statAgot: 'sold out',
+    statHoyLabel: "☀ Today's flavor",
+    mainTitle: "Today's Menu",
+    mainDesc: 'Edit flavors, mark sold out, or add new ones. Changes are reflected instantly on the site.',
+    btnAdd: 'Add flavor', loading: 'Loading menu...',
+    emptyGrid: 'No flavors yet. Add the first one!',
+    errConnect: 'Connection error. Check your Supabase configuration.',
+    panelAdd: 'Add flavor', panelEdit: 'Edit flavor',
+    labelIcon: 'Icon', labelName: 'Flavor name *',
+    placeholderName: 'E.g.: Tropical passion fruit',
+    labelDesc: 'Description *',
+    placeholderDesc: 'Describe the ingredients and flavor profile...',
+    labelCat: 'Category',
+    catFrutal: '🍓 Fruity', catCremoso: '🥛 Creamy', catChocolate: '🍫 Chocolate', catEspecial: '✨ Special',
+    catLabelFrutal: 'Fruity', catLabelCremoso: 'Creamy', catLabelChocolate: 'Chocolate', catLabelEspecial: 'Special',
+    labelTag: 'Tag', placeholderTag: 'E.g.: Local, Classic, Sorbet...',
+    toggleHoy: "Today's flavor ☀", toggleAgotado: 'Mark as sold out',
+    btnCancel: 'Cancel', btnSave: 'Save flavor', btnSaving: 'Saving...',
+    btnReset: 'Reset to default menu',
+    badgeHoy: 'today', badgeSold: 'sold out',
+    cardHoyActive: '☀ Today', cardHoyInactive: '☀ Set as today',
+    cardSoldActive: '✓ Restock', cardSoldInactive: '✕ Sold out',
+    toastSignOut: 'Signed out', toastHoyRemoved: "Today's flavor removed",
+    toastReset: 'Menu reset to defaults',
+    toastErrConnect: 'Connection error', toastErrUpdate: 'Error updating', toastErrDelete: 'Error deleting',
+    confirmReset: 'Reset the menu to the 6 original flavors? All changes will be lost.',
+    toastHoySet:    (n) => `☀ "${n}" set as today's flavor`,
+    toastAgotadoOn: (n) => `"${n}" marked as sold out`,
+    toastAgotadoOff:(n) => `"${n}" is available again`,
+    toastDeleted:   (n) => `"${n}" deleted`,
+    toastAdded:     (n) => `"${n}" added to menu`,
+    toastUpdated:   (n) => `"${n}" updated`,
+    toastErrSave:   (m) => `Error saving: ${m}`,
+    toastErrReset:  (m) => `Error: ${m}`,
+    confirmDelete:  (n) => `Delete "${n}" from the menu?`,
+  },
+  fr: {
+    loginTitle: 'Panel du jour', loginSub: 'Connectez-vous pour mettre à jour le menu',
+    loginEmail: 'Adresse e-mail', loginPassword: 'Mot de passe',
+    loginBtn: 'Connexion', loginBtnLoading: 'Connexion...',
+    loginFooter: "Réservé à l'équipe Wabi Gelato",
+    loginErr: 'E-mail ou mot de passe incorrect',
+    navLabel: 'Panel du jour', navPreview: 'Voir le site', navSignOut: 'Déconnexion',
+    statSabores: 'saveurs', statDisp: 'disponibles', statAgot: 'épuisées',
+    statHoyLabel: '☀ Saveur du jour',
+    mainTitle: 'Menu du jour',
+    mainDesc: "Modifiez les saveurs, marquez les épuisées ou ajoutez-en. Les changements s'affichent instantanément.",
+    btnAdd: 'Ajouter saveur', loading: 'Chargement...',
+    emptyGrid: 'Aucune saveur encore. Ajoutez la première !',
+    errConnect: 'Erreur de connexion. Vérifiez votre configuration Supabase.',
+    panelAdd: 'Ajouter saveur', panelEdit: 'Modifier saveur',
+    labelIcon: 'Icône', labelName: 'Nom de la saveur *',
+    placeholderName: 'Ex : Fruit de la passion tropical',
+    labelDesc: 'Description *',
+    placeholderDesc: 'Décrivez les ingrédients et le profil de saveur...',
+    labelCat: 'Catégorie',
+    catFrutal: '🍓 Fruité', catCremoso: '🥛 Crémeux', catChocolate: '🍫 Chocolat', catEspecial: '✨ Spécial',
+    catLabelFrutal: 'Fruité', catLabelCremoso: 'Crémeux', catLabelChocolate: 'Chocolat', catLabelEspecial: 'Spécial',
+    labelTag: 'Étiquette', placeholderTag: 'Ex : Local, Classique, Sorbet...',
+    toggleHoy: 'Saveur du jour ☀', toggleAgotado: 'Marquer comme épuisé',
+    btnCancel: 'Annuler', btnSave: 'Enregistrer', btnSaving: 'Enregistrement...',
+    btnReset: 'Réinitialiser le menu',
+    badgeHoy: "aujourd'hui", badgeSold: 'épuisé',
+    cardHoyActive: "☀ Aujourd'hui", cardHoyInactive: "☀ Définir aujourd'hui",
+    cardSoldActive: '✓ Remettre', cardSoldInactive: '✕ Épuisé',
+    toastSignOut: 'Déconnecté', toastHoyRemoved: 'Saveur du jour supprimée',
+    toastReset: 'Menu réinitialisé',
+    toastErrConnect: 'Erreur de connexion', toastErrUpdate: 'Erreur de mise à jour', toastErrDelete: 'Erreur de suppression',
+    confirmReset: 'Réinitialiser le menu aux 6 saveurs originales ? Toutes les modifications seront perdues.',
+    toastHoySet:    (n) => `☀ "${n}" défini comme saveur du jour`,
+    toastAgotadoOn: (n) => `"${n}" marqué comme épuisé`,
+    toastAgotadoOff:(n) => `"${n}" est à nouveau disponible`,
+    toastDeleted:   (n) => `"${n}" supprimé`,
+    toastAdded:     (n) => `"${n}" ajouté au menu`,
+    toastUpdated:   (n) => `"${n}" mis à jour`,
+    toastErrSave:   (m) => `Erreur d'enregistrement : ${m}`,
+    toastErrReset:  (m) => `Erreur : ${m}`,
+    confirmDelete:  (n) => `Supprimer "${n}" du menu ?`,
+  }
+};
+
+let currentLang = localStorage.getItem('wabi-lang') || 'es';
+
+function t(key) { return LANGS[currentLang][key] ?? LANGS.es[key] ?? key; }
+
+function setLang(lang) {
+  if (!LANGS[lang]) return;
+  currentLang = lang;
+  localStorage.setItem('wabi-lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n);
+    if (typeof v === 'string') el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.querySelectorAll('[data-i18n-value]').forEach(el => {
+    const v = t(el.dataset.i18nValue);
+    if (typeof v === 'string') el.textContent = v;
+  });
+  document.querySelectorAll('.lang-sw__btn').forEach(b => b.classList.toggle('is-active', b.dataset.lang === lang));
+}
+
+document.querySelectorAll('.lang-sw__btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    setLang(btn.dataset.lang);
+    if (!document.getElementById('viewAdmin').hidden) renderGrid();
+  });
+});
+
+/* ---------- Estado de editing ---------- */
 let editingId = null;
 
 /* ---------- Vistas ---------- */
@@ -25,16 +188,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const btn      = e.target.querySelector('.login-btn');
 
   btn.disabled = true;
-  btn.textContent = 'Entrando...';
+  btn.textContent = t('loginBtnLoading');
   errEl.textContent = '';
 
   try {
     await wabiAuth.signIn(email, password);
-    /* onAuthStateChange maneja la transición */
   } catch {
-    errEl.textContent = 'Correo o contraseña incorrectos';
+    errEl.textContent = t('loginErr');
     btn.disabled = false;
-    btn.textContent = 'Entrar';
+    btn.textContent = t('loginBtn');
   }
 });
 
@@ -52,7 +214,7 @@ wabiAuth.onChange((_event, session) => {
 /* ---------- Cerrar sesión ---------- */
 document.getElementById('btnSignOut').addEventListener('click', async () => {
   await wabiAuth.signOut();
-  showToast('Sesión cerrada');
+  showToast(t('toastSignOut'));
 });
 
 /* ---------- Stats ---------- */
@@ -67,18 +229,17 @@ function updateStats(items) {
 }
 
 /* ---------- Render ---------- */
-const CAT_LABELS = { frutal: 'Frutal', cremoso: 'Cremoso', chocolate: 'Chocolate', especial: 'Especial' };
 const CAT_COLORS = { frutal: '#EC9389', cremoso: '#C9A85C', chocolate: '#7C6647', especial: '#F2C744' };
 
 async function renderGrid() {
   const grid = document.getElementById('admGrid');
-  grid.innerHTML = '<div class="adm-loading">Cargando menú...</div>';
+  grid.innerHTML = `<div class="adm-loading">${t('loading')}</div>`;
 
   let items;
   try {
     items = await wabiMenu.getAll();
   } catch {
-    grid.innerHTML = '<p class="adm-empty">Error al conectar. Verifica tu configuración de Supabase.</p>';
+    grid.innerHTML = `<p class="adm-empty">${t('errConnect')}</p>`;
     return;
   }
 
@@ -86,9 +247,14 @@ async function renderGrid() {
   grid.innerHTML = '';
 
   if (items.length === 0) {
-    grid.innerHTML = '<p class="adm-empty">No hay sabores todavía. ¡Agrega el primero!</p>';
+    grid.innerHTML = `<p class="adm-empty">${t('emptyGrid')}</p>`;
     return;
   }
+
+  const CAT_LABELS = {
+    frutal: t('catLabelFrutal'), cremoso: t('catLabelCremoso'),
+    chocolate: t('catLabelChocolate'), especial: t('catLabelEspecial')
+  };
 
   items.forEach(f => {
     const card = document.createElement('div');
@@ -101,8 +267,8 @@ async function renderGrid() {
       <div class="adm-card__top">
         <span class="adm-card__icon">${esc(f.icon)}</span>
         <div class="adm-card__badges">
-          ${f.is_hoy  ? '<span class="adm-badge adm-badge--hoy">☀ hoy</span>'     : ''}
-          ${f.agotado ? '<span class="adm-badge adm-badge--sold">agotado</span>'   : ''}
+          ${f.is_hoy  ? `<span class="adm-badge adm-badge--hoy">☀ ${t('badgeHoy')}</span>`  : ''}
+          ${f.agotado ? `<span class="adm-badge adm-badge--sold">${t('badgeSold')}</span>`   : ''}
         </div>
       </div>
       <div class="adm-card__cat" style="color:${CAT_COLORS[f.category] || '#C9A85C'}">${CAT_LABELS[f.category] || f.category}</div>
@@ -110,13 +276,13 @@ async function renderGrid() {
       <p class="adm-card__desc">${esc(f.description)}</p>
       <span class="adm-card__tag">${esc(f.tag)}</span>
       <div class="adm-card__actions">
-        <button class="adm-act adm-act--hoy"  data-id="${f.id}">${f.is_hoy  ? '☀ Es hoy'   : '☀ Marcar como hoy'}</button>
-        <button class="adm-act adm-act--sold" data-id="${f.id}">${f.agotado ? '✓ Reponer'  : '✕ Agotado'}</button>
+        <button class="adm-act adm-act--hoy"  data-id="${f.id}">${f.is_hoy  ? t('cardHoyActive')  : t('cardHoyInactive')}</button>
+        <button class="adm-act adm-act--sold" data-id="${f.id}">${f.agotado ? t('cardSoldActive') : t('cardSoldInactive')}</button>
         <div class="adm-card__ctrl">
-          <button class="adm-ctrl adm-ctrl--edit" data-id="${f.id}" title="Editar">
+          <button class="adm-ctrl adm-ctrl--edit" data-id="${f.id}" title="${t('panelEdit')}">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5l3 3L6 17H3v-3L14.5 2.5z"/></svg>
           </button>
-          <button class="adm-ctrl adm-ctrl--del" data-id="${f.id}" title="Eliminar">
+          <button class="adm-ctrl adm-ctrl--del" data-id="${f.id}">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,6 16,6"/><path d="M8 6V4h4v2M6 6l1 11h6l1-11"/></svg>
           </button>
         </div>
@@ -164,7 +330,7 @@ function closePanel() {
 
 function openAdd() {
   editingId = null;
-  document.getElementById('panelTitle').textContent = 'Agregar sabor';
+  document.getElementById('panelTitle').textContent = t('panelAdd');
   document.getElementById('flavorForm').reset();
   document.getElementById('fIcon').value = '🍦';
   document.getElementById('fCat').value = 'frutal';
@@ -179,7 +345,7 @@ async function openEdit(id) {
   if (!f) return;
 
   editingId = id;
-  document.getElementById('panelTitle').textContent    = 'Editar sabor';
+  document.getElementById('panelTitle').textContent    = t('panelEdit');
   document.getElementById('fIcon').value               = f.icon;
   document.getElementById('fName').value               = f.name;
   document.getElementById('fDesc').value               = f.description;
@@ -194,48 +360,48 @@ async function openEdit(id) {
 /* ---------- Acciones ---------- */
 async function toggleHoy(id) {
   let items;
-  try { items = await wabiMenu.getAll(); } catch { showToast('Error de conexión', 'warn'); return; }
+  try { items = await wabiMenu.getAll(); } catch { showToast(t('toastErrConnect'), 'warn'); return; }
   const f = items.find(x => x.id === id);
   if (!f) return;
 
   try {
     if (!f.is_hoy) {
       await wabiMenu.setHoy(id);
-      showToast(`☀ "${f.name}" marcado como sabor de hoy`);
+      showToast(LANGS[currentLang].toastHoySet(f.name));
     } else {
       await wabiMenu.update(id, { is_hoy: false });
-      showToast('Sabor de hoy removido');
+      showToast(t('toastHoyRemoved'));
     }
     renderGrid();
-  } catch { showToast('Error al actualizar', 'warn'); }
+  } catch { showToast(t('toastErrUpdate'), 'warn'); }
 }
 
 async function toggleAgotado(id) {
   let items;
-  try { items = await wabiMenu.getAll(); } catch { showToast('Error de conexión', 'warn'); return; }
+  try { items = await wabiMenu.getAll(); } catch { showToast(t('toastErrConnect'), 'warn'); return; }
   const f = items.find(x => x.id === id);
   if (!f) return;
 
   try {
     await wabiMenu.update(id, { agotado: !f.agotado });
     showToast(f.agotado
-      ? `"${f.name}" vuelve a estar disponible`
-      : `"${f.name}" marcado como agotado`);
+      ? LANGS[currentLang].toastAgotadoOff(f.name)
+      : LANGS[currentLang].toastAgotadoOn(f.name));
     renderGrid();
-  } catch { showToast('Error al actualizar', 'warn'); }
+  } catch { showToast(t('toastErrUpdate'), 'warn'); }
 }
 
 async function deleteFlavor(id) {
   let items;
   try { items = await wabiMenu.getAll(); } catch { return; }
   const f = items.find(x => x.id === id);
-  if (!f || !confirm(`¿Eliminar "${f.name}" del menú?`)) return;
+  if (!f || !confirm(LANGS[currentLang].confirmDelete(f.name))) return;
 
   try {
     await wabiMenu.remove(id);
-    showToast(`"${f.name}" eliminado`, 'warn');
+    showToast(LANGS[currentLang].toastDeleted(f.name), 'warn');
     renderGrid();
-  } catch { showToast('Error al eliminar', 'warn'); }
+  } catch { showToast(t('toastErrDelete'), 'warn'); }
 }
 
 /* ---------- Formulario ---------- */
@@ -251,39 +417,39 @@ document.getElementById('flavorForm').addEventListener('submit', async (e) => {
 
   const btn = document.querySelector('.adm-btn-save');
   btn.disabled = true;
-  btn.textContent = 'Guardando...';
+  btn.textContent = t('btnSaving');
 
   try {
     if (editingId) {
       if (is_hoy) await wabiMenu.setHoy(editingId);
       await wabiMenu.update(editingId, { icon, name, description: desc, category: cat, tag, is_hoy, agotado });
-      showToast(`"${name}" actualizado`);
+      showToast(LANGS[currentLang].toastUpdated(name));
     } else {
       const nuevo = await wabiMenu.add({ icon, name, description: desc, category: cat, tag, is_hoy: false, agotado });
       if (is_hoy) await wabiMenu.setHoy(nuevo.id);
-      showToast(`"${name}" agregado al menú`);
+      showToast(LANGS[currentLang].toastAdded(name));
     }
     closePanel();
     renderGrid();
   } catch (err) {
-    showToast('Error al guardar: ' + err.message, 'warn');
+    showToast(LANGS[currentLang].toastErrSave(err.message), 'warn');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Guardar sabor';
+    btn.textContent = t('btnSave');
   }
 });
 
 /* ---------- Restablecer ---------- */
 document.getElementById('btnReset')?.addEventListener('click', async () => {
-  if (!confirm('¿Restablecer el menú a los 6 sabores originales? Se eliminarán todos los cambios.')) return;
+  if (!confirm(t('confirmReset'))) return;
   const btn = document.getElementById('btnReset');
   btn.disabled = true;
   try {
     await wabiMenu.resetToDefaults();
-    showToast('Menú restablecido a valores originales');
+    showToast(t('toastReset'));
     renderGrid();
   } catch (err) {
-    showToast('Error: ' + err.message, 'warn');
+    showToast(LANGS[currentLang].toastErrReset(err.message), 'warn');
   } finally {
     btn.disabled = false;
   }
@@ -321,7 +487,11 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel
 /* ---------- Fecha ---------- */
 function updateHeaderDate() {
   const el = document.getElementById('headerDate');
-  if (el) el.textContent = new Date().toLocaleDateString('es-MX', {
-    weekday: 'long', day: 'numeric', month: 'long'
-  });
+  if (el) el.textContent = new Date().toLocaleDateString(
+    currentLang === 'fr' ? 'fr-FR' : currentLang === 'en' ? 'en-US' : 'es-MX',
+    { weekday: 'long', day: 'numeric', month: 'long' }
+  );
 }
+
+/* ---------- Inicializar idioma ---------- */
+setLang(currentLang);

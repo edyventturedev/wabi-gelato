@@ -779,6 +779,33 @@
     .adm-toast--show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .adm-toast--warn { background: #7C3C1A; }
 
+    /* ========== LANG SWITCHER ========== */
+    .lang-sw {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--warm);
+      border-radius: 999px;
+      padding: 3px;
+      border: 1px solid rgba(201,168,92,0.22);
+    }
+    .lang-sw__btn {
+      font-family: var(--t-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--bark);
+      background: transparent;
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.15s var(--ease), color 0.15s var(--ease);
+    }
+    .lang-sw__btn.is-active { background: var(--dark); color: var(--cream); }
+    .lang-sw__btn:hover:not(.is-active) { background: var(--sand); color: var(--dark); }
+    .lang-sw--login { background: transparent; border-color: rgba(217,200,164,0.5); margin: 0 auto 20px; }
+
     /* ========== FOOTER ========== */
     .adm-footer {
       text-align: center;
@@ -830,17 +857,23 @@
           wabi gelato
         </a>
 
-        <h1>Panel del día</h1>
-        <p>Accede para actualizar el menú</p>
+        <div class="lang-sw lang-sw--login">
+          <button class="lang-sw__btn is-active" data-lang="es">ES</button>
+          <button class="lang-sw__btn" data-lang="en">EN</button>
+          <button class="lang-sw__btn" data-lang="fr">FR</button>
+        </div>
+
+        <h1 data-i18n="loginTitle">Panel del día</h1>
+        <p data-i18n="loginSub">Accede para actualizar el menú</p>
 
         <form class="login-form" id="loginForm" novalidate>
-          <input type="email" id="loginEmail" placeholder="Correo electrónico" required autocomplete="email">
-          <input type="password" id="loginPassword" placeholder="Contraseña" required autocomplete="current-password">
+          <input type="email" id="loginEmail" placeholder="Correo electrónico" data-i18n-placeholder="loginEmail" required autocomplete="email">
+          <input type="password" id="loginPassword" placeholder="Contraseña" data-i18n-placeholder="loginPassword" required autocomplete="current-password">
           <p class="login-err" id="loginErr" role="alert"></p>
-          <button type="submit" class="login-btn">Entrar</button>
+          <button type="submit" class="login-btn" data-i18n="loginBtn">Entrar</button>
         </form>
 
-        <p class="login-footer">Solo para uso del equipo Wabi Gelato</p>
+        <p class="login-footer" data-i18n="loginFooter">Solo para uso del equipo Wabi Gelato</p>
       </div>
     </div>
   </div>
@@ -860,17 +893,22 @@
           wabi gelato
         </a>
         <span class="adm-nav__sep"></span>
-        <span class="adm-nav__label">Panel del día</span>
+        <span class="adm-nav__label" data-i18n="navLabel">Panel del día</span>
       </div>
       <div class="adm-nav__right">
         <span class="adm-nav__date" id="headerDate"></span>
+        <div class="lang-sw">
+          <button class="lang-sw__btn is-active" data-lang="es">ES</button>
+          <button class="lang-sw__btn" data-lang="en">EN</button>
+          <button class="lang-sw__btn" data-lang="fr">FR</button>
+        </div>
         <a href="index.html" class="adm-nav__preview" target="_blank" rel="noopener">
-          Ver sitio
+          <span data-i18n="navPreview">Ver sitio</span>
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10L10 2M5 2h5v5"/></svg>
         </a>
-        <button class="adm-nav__signout" id="btnSignOut" title="Cerrar sesión">
+        <button class="adm-nav__signout" id="btnSignOut">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3h4v14h-4M9 14l4-4-4-4M13 10H3"/></svg>
-          Salir
+          <span data-i18n="navSignOut">Salir</span>
         </button>
       </div>
     </header>
@@ -879,18 +917,18 @@
     <div class="adm-stats">
       <div class="adm-stat">
         <span class="adm-stat__num" id="statTotal">—</span>
-        <span class="adm-stat__label">sabores</span>
+        <span class="adm-stat__label" data-i18n="statSabores">sabores</span>
       </div>
       <div class="adm-stat">
         <span class="adm-stat__num" id="statAvail">—</span>
-        <span class="adm-stat__label">disponibles</span>
+        <span class="adm-stat__label" data-i18n="statDisp">disponibles</span>
       </div>
       <div class="adm-stat adm-stat--sold">
         <span class="adm-stat__num" id="statSoldOut">—</span>
-        <span class="adm-stat__label">agotados</span>
+        <span class="adm-stat__label" data-i18n="statAgot">agotados</span>
       </div>
       <div class="adm-stat adm-stat--hoy-flavor">
-        <span class="adm-stat__label">☀ Sabor de hoy</span>
+        <span class="adm-stat__label" data-i18n="statHoyLabel">☀ Sabor de hoy</span>
         <span class="adm-stat__num" id="todayFlavor">—</span>
       </div>
     </div>
@@ -899,12 +937,12 @@
     <main class="adm-main">
       <div class="adm-toolbar">
         <div class="adm-toolbar__left">
-          <h1>Menú de hoy</h1>
-          <p>Edita sabores, marca agotados o agrega nuevos. Los cambios se reflejan al instante en el sitio.</p>
+          <h1 data-i18n="mainTitle">Menú de hoy</h1>
+          <p data-i18n="mainDesc">Edita sabores, marca agotados o agrega nuevos. Los cambios se reflejan al instante en el sitio.</p>
         </div>
         <button class="adm-btn adm-btn--add" id="btnAdd">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-          Agregar sabor
+          <span data-i18n="btnAdd">Agregar sabor</span>
         </button>
       </div>
 
@@ -915,7 +953,7 @@
 
     <!-- FOOTER -->
     <footer class="adm-footer">
-      <button class="adm-footer__reset" id="btnReset">Restablecer menú predeterminado</button>
+      <button class="adm-footer__reset" id="btnReset" data-i18n="btnReset">Restablecer menú predeterminado</button>
     </footer>
 
     <!-- OVERLAY -->
@@ -930,7 +968,7 @@
 
       <form class="adm-form" id="flavorForm" novalidate>
         <div class="adm-field">
-          <label>Ícono</label>
+          <label data-i18n="labelIcon">Ícono</label>
           <div class="adm-icon-row">
             <input type="text" id="fIcon" maxlength="4" placeholder="🍦" aria-label="Ícono emoji">
             <div class="adm-emoji-scroll">
@@ -940,47 +978,47 @@
         </div>
 
         <div class="adm-field">
-          <label for="fName">Nombre del sabor *</label>
-          <input type="text" id="fName" required placeholder="Ej: Maracuyá tropical" maxlength="60">
+          <label for="fName" data-i18n="labelName">Nombre del sabor *</label>
+          <input type="text" id="fName" required placeholder="Ej: Maracuyá tropical" data-i18n-placeholder="placeholderName" maxlength="60">
         </div>
 
         <div class="adm-field">
-          <label for="fDesc">Descripción *</label>
-          <textarea id="fDesc" rows="3" required placeholder="Describe los ingredientes y el perfil del sabor..." maxlength="200"></textarea>
+          <label for="fDesc" data-i18n="labelDesc">Descripción *</label>
+          <textarea id="fDesc" rows="3" required placeholder="Describe los ingredientes y el perfil del sabor..." data-i18n-placeholder="placeholderDesc" maxlength="200"></textarea>
         </div>
 
         <div class="adm-field">
-          <label for="fCat">Categoría</label>
+          <label for="fCat" data-i18n="labelCat">Categoría</label>
           <select id="fCat">
-            <option value="frutal">🍓 Frutal</option>
-            <option value="cremoso">🥛 Cremoso</option>
-            <option value="chocolate">🍫 Chocolate</option>
-            <option value="especial">✨ Especial</option>
+            <option value="frutal" data-i18n-value="catFrutal">🍓 Frutal</option>
+            <option value="cremoso" data-i18n-value="catCremoso">🥛 Cremoso</option>
+            <option value="chocolate" data-i18n-value="catChocolate">🍫 Chocolate</option>
+            <option value="especial" data-i18n-value="catEspecial">✨ Especial</option>
           </select>
         </div>
 
         <div class="adm-field">
-          <label for="fTag">Etiqueta</label>
-          <input type="text" id="fTag" placeholder="Ej: Local, Clásico, Sorbete..." maxlength="30">
+          <label for="fTag" data-i18n="labelTag">Etiqueta</label>
+          <input type="text" id="fTag" placeholder="Ej: Local, Clásico, Sorbete..." data-i18n-placeholder="placeholderTag" maxlength="30">
         </div>
 
         <div class="adm-toggles">
           <label class="adm-toggle">
             <input type="checkbox" id="fHoy">
             <span class="adm-toggle-track"></span>
-            <span>Sabor de hoy ☀</span>
+            <span data-i18n="toggleHoy">Sabor de hoy ☀</span>
           </label>
           <label class="adm-toggle">
             <input type="checkbox" id="fAgotado">
             <span class="adm-toggle-track"></span>
-            <span>Marcar como agotado</span>
+            <span data-i18n="toggleAgotado">Marcar como agotado</span>
           </label>
         </div>
       </form>
 
       <div class="adm-form__actions">
-        <button type="button" class="adm-btn-cancel" id="btnCancel">Cancelar</button>
-        <button type="submit" form="flavorForm" class="adm-btn-save">Guardar sabor</button>
+        <button type="button" class="adm-btn-cancel" id="btnCancel" data-i18n="btnCancel">Cancelar</button>
+        <button type="submit" form="flavorForm" class="adm-btn-save" data-i18n="btnSave">Guardar sabor</button>
       </div>
     </aside>
 
